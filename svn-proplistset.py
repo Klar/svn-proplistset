@@ -6,6 +6,9 @@ import os
 # add your new line here "path + scriptname"
 newscriptadd = "https://svn-repopa.th/svn/path/to/scriptname.py scriptname.py"
 
+# we can also remove lines
+remove_lines = ["https://svn-repopa.th/svn/path/to/scriptname.py scriptname.py","https://svn-repopa.th/svn/path/to/scriptname2.py scriptname2.py"]
+
 # your svn client path
 svn_client_path = "/my/local/path/to/svn/checkout/"
 
@@ -34,14 +37,19 @@ for foldername in os.listdir(svn_client_path):
         if line == "":
             continue
 
+        if line in remove_lines:
+            continue
+
         file.write(line + '\n')
 
     # adds your new line to the end of our tmp file
     file.write(newscriptadd)
     file.close()
 
+
+
     # write everything back to written itmp file to svn:externals
     cmd = "svn propset svn:externals -F " + writefile + " " + svn_client_path + foldername
     cmd_out = os.popen(cmd).read().split('\n')
 
-    print foldername + "written"
+    print foldername + " written"
